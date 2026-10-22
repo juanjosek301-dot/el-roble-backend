@@ -32,3 +32,7 @@ Genera el cliente con `npm run prisma:generate` y aplica el esquema con `npm run
 - `POST /api/auth/login` recibe `{ "email", "password" }` y devuelve `{ "token", "user": { "id", "nombre", "email", "role" } }`.
 - El token es JWT firmado con `JWT_SECRET` y vence según `JWT_EXPIRES_IN`.
 - El middleware `authenticate` valida `Authorization: Bearer <token>` y `requireRole("admin")` diferencia usuarios sin permiso con `403`.
+
+## CRUD administrativo de productos
+
+El administrador autenticado puede crear productos en POST /api/productos, actualizarlos en PUT /api/productos/:id y eliminarlos en DELETE /api/productos/:id. La API valida nombre, precio, categoría e imagen. Admite las categorías abarrotes, bebidas, aseo, lacteos y snacks.
