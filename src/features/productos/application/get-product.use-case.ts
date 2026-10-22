@@ -1,4 +1,4 @@
-import { HttpError } from "./errors.js";
+import { HttpError } from "../../../common/application/http-error.js";
 import type { ProductRepository } from "../domain/product.js";
 
 export class GetProductUseCase {

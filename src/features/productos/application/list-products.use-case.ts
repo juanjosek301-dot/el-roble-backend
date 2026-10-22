@@ -1,5 +1,5 @@
 import type { PaginatedProducts, ProductFilters, ProductRepository } from "../domain/product.js";
-import { HttpError } from "./errors.js";
+import { HttpError } from "../../../common/application/http-error.js";
 
 const DEFAULT_LIMIT = 12;
 const MAX_LIMIT = 50;

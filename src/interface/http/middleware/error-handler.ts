@@ -1,5 +1,5 @@
 import type { ErrorRequestHandler } from "express";
-import { HttpError } from "../../../features/productos/application/errors.js";
+import { HttpError } from "../../../common/application/http-error.js";
 
 export const errorHandler: ErrorRequestHandler = (error, _request, response, _next) => {
   if (error instanceof HttpError) {
