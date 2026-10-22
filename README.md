@@ -4,7 +4,7 @@ API REST del minimercado El Roble. Este repositorio se desarrolla por separado d
 
 ## Estado
 
-En esta primera etapa están preparados el servidor Express, TypeScript, la configuración inicial de Prisma para PostgreSQL, CORS y el endpoint de salud `GET /api/health`. Los modelos, casos de uso y endpoints del negocio se agregarán en entregas progresivas.
+Está disponible el catálogo público con `GET /api/productos` (paginación y filtros por categoría y nombre) y `GET /api/productos/:id`, además del endpoint de salud `GET /api/health`.
 
 ## Requisitos
 
@@ -18,7 +18,7 @@ En esta primera etapa están preparados el servidor Express, TypeScript, la conf
 3. Inicia el servidor en desarrollo con `npm run dev`.
 4. Comprueba `http://localhost:3001/api/health`.
 
-La generación del cliente Prisma y las migraciones se habilitarán al agregar los modelos de la base de datos.
+Genera el cliente con `npm run prisma:generate` y aplica el esquema con `npm run prisma:migrate` después de configurar PostgreSQL.
 
 ## Endpoints previstos
 
