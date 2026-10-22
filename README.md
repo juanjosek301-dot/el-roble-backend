@@ -2,10 +2,6 @@
 
 API REST del minimercado El Roble. Este repositorio se desarrolla por separado del frontend y organiza el código en las capas `domain`, `application`, `infrastructure` e `interface`.
 
-## Estado
-
-Está disponible el catálogo público con `GET /api/productos` (paginación y filtros por categoría y nombre) y `GET /api/productos/:id`, registro e inicio de sesión, además del endpoint de salud `GET /api/health`.
-
 ## Requisitos
 
 - Node.js 22 o superior
@@ -14,25 +10,36 @@ Está disponible el catálogo público con `GET /api/productos` (paginación y f
 ## Configuración local
 
 1. Instala dependencias con `npm install`.
-2. Copia `.env.example` a `.env` y ajusta `DATABASE_URL` y `JWT_SECRET`.
-3. Inicia el servidor en desarrollo con `npm run dev`.
-4. Comprueba `http://localhost:3001/api/health`.
+2. Copia `.env.example` a `.env` y configura `DATABASE_URL` con los datos reales de PostgreSQL. Cambia también `JWT_SECRET` por una clave local segura.
+3. Crea las tablas con `npm run prisma:migrate`.
+4. Genera el cliente de Prisma con `npm run prisma:generate`.
+5. Carga el catálogo y los usuarios de demostración con `npm run prisma:seed`.
+6. Inicia el servidor con `npm run dev` y comprueba `http://localhost:3001/api/health`.
 
-Genera el cliente con `npm run prisma:generate` y aplica el esquema con `npm run prisma:migrate` después de configurar PostgreSQL.
+El seed es para el ambiente local/de entrega. Crea estos usuarios de prueba:
 
-## Endpoints previstos
+| Rol | Correo | Contraseña |
+|---|---|---|
+| admin | `admin@elroble.local` | `Admin1234!` |
+| user | `cliente@elroble.local` | `Cliente1234!` |
 
-- Autenticación: registro e inicio de sesión.
-- Productos: catálogo paginado y administración restringida a `admin`.
-- Pedidos: creación autenticada, consulta propia y consulta administrativa.
+No uses esas credenciales en un despliegue público. El seed agrega 30 productos del catálogo original y es repetible: actualiza los registros por ID/correo en vez de duplicarlos.
 
-## Autenticación disponible
+## Variables de entorno
 
-- `POST /api/auth/register` recibe `{ "nombre", "email", "password" }`; crea cuentas con rol `user` y guarda la contraseña con hash bcrypt.
-- `POST /api/auth/login` recibe `{ "email", "password" }` y devuelve `{ "token", "user": { "id", "nombre", "email", "role" } }`.
-- El token es JWT firmado con `JWT_SECRET` y vence según `JWT_EXPIRES_IN`.
-- El middleware `authenticate` valida `Authorization: Bearer <token>` y `requireRole("admin")` diferencia usuarios sin permiso con `403`.
+Consulta `.env.example`: `PORT`, `FRONTEND_URL`, `DATABASE_URL`, `JWT_SECRET` y `JWT_EXPIRES_IN`. El frontend local se ejecuta en `http://localhost:3000` y la API en `http://localhost:3001`.
 
-## CRUD administrativo de productos
+## Rutas disponibles
 
-El administrador autenticado puede crear productos en POST /api/productos, actualizarlos en PUT /api/productos/:id y eliminarlos en DELETE /api/productos/:id. La API valida nombre, precio, categoría e imagen. Admite las categorías abarrotes, bebidas, aseo, lacteos y snacks.
+- `GET /api/health`: verifica que la API esté activa.
+- `GET /api/productos`: catálogo paginado y filtros por categoría y nombre.
+- `GET /api/productos/:id`: detalle de un producto.
+- `POST /api/auth/register`: registro de cuenta con rol `user`.
+- `POST /api/auth/login`: inicio de sesión; devuelve token JWT y datos del usuario.
+- `POST /api/productos`, `PUT /api/productos/:id`, `DELETE /api/productos/:id`: administración de productos, solo para `admin` autenticado.
+
+Las rutas administrativas reciben `Authorization: Bearer <token>`. Una solicitud sin autenticación válida responde `401`; un usuario autenticado sin rol admin recibe `403`.
+
+## Estado
+
+El catálogo, autenticación y CRUD administrativo están implementados. La migración inicial y el seed están preparados; para recibir productos, configura PostgreSQL, aplica la migración y ejecuta el seed.
