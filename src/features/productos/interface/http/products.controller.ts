@@ -18,7 +18,8 @@ export class ProductsController {
 
   getById = async (request: Request, response: Response, next: NextFunction) => {
     try {
-      response.json(await this.getProduct.execute(request.params.id ?? ""));
+      const id = request.params.id;
+      response.json(await this.getProduct.execute(typeof id === "string" ? id : ""));
     } catch (error) {
       next(error);
     }
