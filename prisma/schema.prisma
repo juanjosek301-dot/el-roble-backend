@@ -12,12 +12,18 @@ enum Role {
   admin
 }
 
+enum PaymentMethod {
+  efectivo
+  nequi
+}
+
 model User {
   id           String   @id @default(cuid())
   nombre       String   @db.VarChar(100)
   email        String   @unique @db.VarChar(254)
   passwordHash String   @db.VarChar(255)
   role         Role     @default(user)
+  orders       Order[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -25,15 +31,51 @@ model User {
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  nombre    String   @db.VarChar(120)
-  precio    Decimal  @db.Decimal(10, 2)
-  categoria String   @db.VarChar(40)
-  imagen    String   @db.VarChar(500)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int         @id @default(autoincrement())
+  nombre     String      @db.VarChar(120)
+  precio     Decimal     @db.Decimal(10, 2)
+  categoria  String      @db.VarChar(40)
+  imagen     String      @db.VarChar(500)
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@index([categoria])
   @@index([nombre])
   @@map("productos")
+}
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  userId          String
+  clienteNombre   String        @db.VarChar(100)
+  clienteEmail    String        @db.VarChar(254)
+  telefono        String        @db.VarChar(30)
+  direccion       String        @db.VarChar(250)
+  metodoPago      PaymentMethod
+  observaciones   String?       @db.VarChar(1000)
+  estado          String        @default("pendiente") @db.VarChar(30)
+  total           Decimal       @db.Decimal(10, 2)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  productos       OrderItem[]
+  createdAt       DateTime      @default(now())
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+  @@map("pedidos")
+}
+
+model OrderItem {
+  id            Int     @id @default(autoincrement())
+  orderId       Int
+  productoId    Int
+  nombre        String  @db.VarChar(120)
+  precio        Decimal @db.Decimal(10, 2)
+  cantidad      Int
+  pedido        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  producto      Product @relation(fields: [productoId], references: [id], onDelete: Restrict)
+
+  @@unique([orderId, productoId])
+  @@index([productoId])
+  @@map("pedido_productos")
 }

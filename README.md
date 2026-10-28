@@ -37,9 +37,12 @@ Consulta `.env.example`: `PORT`, `FRONTEND_URL`, `DATABASE_URL`, `JWT_SECRET` y 
 - `POST /api/auth/register`: registro de cuenta con rol `user`.
 - `POST /api/auth/login`: inicio de sesión; devuelve token JWT y datos del usuario.
 - `POST /api/productos`, `PUT /api/productos/:id`, `DELETE /api/productos/:id`: administración de productos, solo para `admin` autenticado.
+- `POST /api/pedidos`: crea un pedido para el usuario autenticado; el total se calcula en el servidor con los precios vigentes.
+- `GET /api/pedidos/mias`: consulta únicamente los pedidos del usuario autenticado.
+- `GET /api/pedidos`: consulta todos los pedidos, solo para `admin` autenticado.
 
-Las rutas administrativas reciben `Authorization: Bearer <token>`. Una solicitud sin autenticación válida responde `401`; un usuario autenticado sin rol admin recibe `403`.
+Las rutas protegidas reciben `Authorization: Bearer <token>`. Una solicitud sin autenticación válida responde `401`; un usuario autenticado sin rol admin recibe `403`.
 
 ## Estado
 
-El catálogo, autenticación y CRUD administrativo están implementados. La migración inicial y el seed están preparados; para recibir productos, configura PostgreSQL, aplica la migración y ejecuta el seed.
+El catálogo, la autenticación, el CRUD administrativo de productos y la creación/consulta de pedidos están implementados. La migración inicial, la migración de pedidos y el seed están preparados; configura PostgreSQL, aplica las migraciones y ejecuta el seed.

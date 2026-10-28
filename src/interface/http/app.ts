@@ -4,6 +4,7 @@ import { healthRouter } from "./routes/health.routes.js";
 import { productsRouter } from "../../features/productos/interface/http/products.routes.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { authRouter } from "../../features/auth/interface/http/auth.routes.js";
+import { ordersRouter } from "../../features/pedidos/interface/http/orders.routes.js";
 
 export function createApp() {
   const app = express();
@@ -16,6 +17,7 @@ export function createApp() {
   app.use("/api/health", healthRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/productos", productsRouter);
+  app.use("/api/pedidos", ordersRouter);
   app.use(errorHandler);
 
   return app;
