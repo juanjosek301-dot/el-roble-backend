@@ -50,6 +50,15 @@ async function main() {
     });
   }
 
+  // Explicit IDs in the seed do not advance PostgreSQL's SERIAL sequence.
+  await prisma.$queryRaw`
+    SELECT setval(
+      pg_get_serial_sequence('public.productos', 'id'),
+      COALESCE((SELECT MAX(id) FROM public.productos), 1),
+      EXISTS (SELECT 1 FROM public.productos)
+    )
+  `;
+
   const adminPassword = await hash("Admin1234!", 10);
   const userPassword = await hash("Cliente1234!", 10);
   await prisma.user.upsert({
