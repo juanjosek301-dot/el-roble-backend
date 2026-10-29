@@ -3,7 +3,7 @@ services:
     name: el-roble-api
     runtime: node
     plan: free
-    buildCommand: npm ci && npm run prisma:generate && npm run build
+    buildCommand: npm ci --include=dev && npm run prisma:generate && npm run build
     startCommand: npm run prisma:deploy && npm run start
     healthCheckPath: /api/health
     envVars:
