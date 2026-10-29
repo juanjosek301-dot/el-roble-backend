@@ -5,9 +5,16 @@ API REST del minimercado El Roble, mantenida en un repositorio independiente del
 ## Despliegues
 
 - **Frontend:** pendiente de publicar esta versión en Vercel.
-- **API:** pendiente de publicar en Render o Railway.
+- **API:** pendiente de desplegar en Render; el repositorio incluye `render.yaml`.
 - El frontend se ejecuta localmente en `http://localhost:3000`; la API local, en `http://localhost:3001`.
 
+## Despliegue en Render
+
+El repositorio incluye `render.yaml` para crear el servicio como Blueprint desde Render. Conecta el repositorio `el-roble-backend` en la rama `main` y confirma la configuración propuesta.
+
+En la configuración inicial, proporciona `DATABASE_URL` con la cadena de conexión de Neon y `FRONTEND_URL` con el origen del frontend. Render genera `JWT_SECRET`; no lo guardes en Git. El build genera Prisma Client y compila TypeScript. Al iniciar, `prisma migrate deploy` aplica las migraciones pendientes y luego arranca la API. Render verifica `/api/health` y proporciona el puerto mediante `PORT`.
+
+Después de desplegar el frontend, actualiza `FRONTEND_URL` en Render con el dominio exacto de Vercel y redepliega la API. Vercel debe tener `NEXT_PUBLIC_API_HOST` configurada con la URL pública de esta API. Los pushes a `main` activan los despliegues conectados.
 ## Ejecutar en local
 
 Requisitos: Node.js 22 o superior y PostgreSQL.
